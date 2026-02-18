@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 import Sidebar from "../../components/Dashboard/Sidebar";
 import Header from "../../components/Dashboard/Header";
@@ -9,31 +10,52 @@ import AnalyzeButton from "../../components/Analyzer/AnalyzeButton";
 import ResultPreview from "../../components/Analyzer/ResultPreview";
 
 function Analyzer() {
+
+  const [file, setFile] = useState(null);
+  const [jdText, setJdText] = useState("");
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleAnalyze = () => {
-    // Dummy backend response
-    const response = {
-      score: 78,
-      matched_skills: ["React", "JavaScript", "HTML", "CSS"],
-      missing_skills: ["Docker", "AWS", "Kubernetes"],
-      recommendations: [
-        "Learn Docker fundamentals",
-        "Get AWS Cloud Practitioner certification",
-        "Practice Kubernetes deployments"
-      ]
-    };
 
-    setResult(response);
+  const handleAnalyze = async () => {
+
+    if (!file || !jdText) {
+      alert("Upload resume & enter JD");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("resume", file);
+    formData.append("jd", jdText);
+
+    try {
+
+      setLoading(true);
+
+      const res = await axios.post(
+        "http://127.0.0.1:5000/analyze",
+        formData
+      );
+
+      setResult(res.data);
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Analysis failed");
+
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
 
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
       <div className="flex-1">
 
         <Header />
@@ -44,22 +66,33 @@ function Analyzer() {
             Resume Analyzer
           </h1>
 
-          {/* Upload + JD */}
           <div className="grid lg:grid-cols-2 gap-6">
-            <UploadBox />
-            <JDInput />
+
+            <UploadBox
+              file={file}
+              setFile={setFile}
+            />
+
+            <JDInput
+              jdText={jdText}
+              setJdText={setJdText}
+            />
+
           </div>
 
-          {/* Analyze Button */}
           <div className="mt-6">
-            <AnalyzeButton onClick={handleAnalyze} />
+            <AnalyzeButton
+              onClick={handleAnalyze}
+              loading={loading}
+            />
           </div>
 
-          {/* Result Section */}
-          {result && <ResultPreview data={result} />}
+          <ResultPreview data={result} />
 
         </div>
+
       </div>
+
     </div>
   );
 }

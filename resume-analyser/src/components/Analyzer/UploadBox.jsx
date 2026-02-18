@@ -1,24 +1,32 @@
-function UploadBox() {
+function UploadBox({ file, setFile }) {
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   return (
     <div className="
       border-2 border-dashed border-gray-300
       p-10 rounded-xl text-center
       bg-white shadow-sm
-      hover:border-blue-500 transition
     ">
 
       <h3 className="font-semibold mb-2">
         Upload Resume
       </h3>
 
-      <p className="text-gray-500 text-sm">
-        Drag & Drop or Select File
-      </p>
-
       <input
         type="file"
+        accept=".pdf"
+        onChange={handleFileChange}
         className="mt-4"
       />
+
+      {file && (
+        <p className="text-sm mt-2 text-green-600">
+          {file.name}
+        </p>
+      )}
 
     </div>
   );

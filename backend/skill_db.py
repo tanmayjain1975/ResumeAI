@@ -1,4 +1,5 @@
-skills = [
+skills_db = [
+
     "python",
     "java",
     "javascript",
@@ -10,5 +11,12 @@ skills = [
     "kubernetes",
     "aws",
     "sql",
-    "mongodb"
+    "mongodb",
+    "flask",
+    "django",
+    "machine learning",
+    "data science",
+    "tensorflow",
+    "pandas",
+    "numpy"
 ]

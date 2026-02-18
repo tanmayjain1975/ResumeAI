@@ -1,7 +1,8 @@
-function AnalyzeButton({ onClick }) {
+function AnalyzeButton({ onClick, loading }) {
   return (
     <button
       onClick={onClick}
+      disabled={loading}
       className="
         w-full bg-gradient-to-r
         from-blue-600 to-indigo-600
@@ -10,7 +11,7 @@ function AnalyzeButton({ onClick }) {
         hover:scale-105 transition
       "
     >
-      Analyze Resume
+      {loading ? "Analyzing..." : "Analyze Resume"}
     </button>
   );
 }

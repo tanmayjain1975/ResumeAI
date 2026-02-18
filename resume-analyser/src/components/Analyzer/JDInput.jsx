@@ -1,9 +1,7 @@
-function JDInput() {
+function JDInput({ jdText, setJdText }) {
+
   return (
-    <div className="
-      bg-white shadow-sm
-      p-6 rounded-xl
-    ">
+    <div className="bg-white shadow-sm p-6 rounded-xl">
 
       <h3 className="font-semibold mb-3">
         Job Description
@@ -11,6 +9,8 @@ function JDInput() {
 
       <textarea
         rows="10"
+        value={jdText}
+        onChange={(e) => setJdText(e.target.value)}
         placeholder="Paste job description here..."
         className="
           w-full border rounded-lg

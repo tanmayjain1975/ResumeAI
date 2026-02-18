@@ -1,84 +1,75 @@
-import AuthLayout from "../../components/AuthLayout";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = async (e) => {
+    e.preventDefault(); // VERY IMPORTANT
+
+    try {
+
+      const res = await axios.post(
+        "http://127.0.0.1:5000/signup",
+        {
+          name,
+          email,
+          password
+        }
+      );
+
+      alert(res.data.message);
+
+      navigate("/login");
+
+    } catch (err) {
+
+      alert(
+        err.response?.data?.error ||
+        "Signup failed"
+      );
+    }
+  };
+
   return (
-    <AuthLayout>
+    <form onSubmit={handleSignup}>
 
-      <div className="
-        bg-white shadow-xl rounded-2xl
-        p-8 w-full max-w-md
-      ">
+      <input
+        placeholder="Name"
+        value={name}
+        onChange={(e) =>
+          setName(e.target.value)
+        }
+      />
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Create an Account
-        </h2>
+      <input
+        placeholder="Email"
+        value={email}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
+      />
 
-        {/* Name */}
-        <input
-          type="text"
-          placeholder="Full Name"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-4 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
+      <input
+        placeholder="Password"
+        type="password"
+        value={password}
+        onChange={(e) =>
+          setPassword(e.target.value)
+        }
+      />
 
-        {/* Email */}
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-4 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
+      <button type="submit">
+        Signup
+      </button>
 
-        {/* Password */}
-        <input
-          type="password"
-          placeholder="Password"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-4 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
-
-        {/* Confirm Password */}
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-6 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
-
-        {/* Signup Button */}
-        <button className="
-          w-full bg-gradient-to-r
-          from-blue-600 to-indigo-600
-          text-white py-3 rounded-lg
-          font-semibold shadow-md
-          hover:scale-105 transition
-        ">
-          Signup
-        </button>
-
-        {/* Login Link */}
-        <p className="text-center mt-4 text-sm">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Login
-          </a>
-        </p>
-
-      </div>
-
-    </AuthLayout>
+    </form>
   );
 }
 

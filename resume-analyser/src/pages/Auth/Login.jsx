@@ -1,67 +1,130 @@
-import AuthLayout from "../../components/AuthLayout";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+
+import { AuthContext } from "../../context/AuthContext";
 
 function Login() {
+
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleNormalLogin = (e) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      alert("Enter email & password");
+      return;
+    }
+
+    const userData = {
+      name: email.split("@")[0],
+      email: email
+    };
+
+    login(userData);
+    navigate("/dashboard");
+  };
+
+
+  const handleGoogleSuccess = (credentialResponse) => {
+
+    const decoded = jwtDecode(
+      credentialResponse.credential
+    );
+
+    const userData = {
+      name: decoded.name,
+      email: decoded.email,
+      picture: decoded.picture
+    };
+
+    login(userData);
+    navigate("/dashboard");
+  };
+
   return (
-    <AuthLayout>
+    <div className="
+      min-h-screen flex items-center
+      justify-center bg-gray-100
+    ">
 
       <div className="
-        bg-white shadow-xl rounded-2xl
-        p-8 w-full max-w-md
+        bg-white p-8 rounded-2xl
+        shadow-xl w-full max-w-md
       ">
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Login to Your Account
-        </h2>
-
-        {/* Email */}
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-4 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
-
-        {/* Password */}
-        <input
-          type="password"
-          placeholder="Password"
-          className="
-            w-full border px-4 py-3 rounded-lg
-            mb-6 focus:outline-none
-            focus:ring-2 focus:ring-blue-500
-          "
-        />
-
-        {/* Login Button */}
-        <button className="
-          w-full bg-gradient-to-r
-          from-blue-600 to-indigo-600
-          text-white py-3 rounded-lg
-          font-semibold shadow-md
-          hover:scale-105 transition
+        <h2 className="
+          text-2xl font-bold text-center
+          mb-6
         ">
           Login
-        </button>
+        </h2>
 
-        {/* Extra Links */}
-        <div className="flex justify-between mt-4 text-sm">
+        {/* Normal Login */}
+        <form onSubmit={handleNormalLogin}>
 
-          <a href="#" className="text-blue-600 hover:underline">
-            Forgot Password?
-          </a>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            className="
+              w-full border px-4 py-3
+              rounded-lg mb-4
+            "
+          />
 
-          <a href="/signup" className="text-blue-600 hover:underline">
-            Create Account
-          </a>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            className="
+              w-full border px-4 py-3
+              rounded-lg mb-6
+            "
+          />
 
+          <button
+            type="submit"
+            className="
+              w-full bg-blue-600
+              text-white py-3
+              rounded-lg font-semibold
+              mb-4
+            "
+          >
+            Login
+          </button>
+
+        </form>
+
+        {/* Divider */}
+        <div className="text-center mb-4">
+          OR
+        </div>
+
+        {/* Google Login */}
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() =>
+              alert("Google Login Failed")
+            }
+          />
         </div>
 
       </div>
-
-    </AuthLayout>
+    </div>
   );
 }
 
