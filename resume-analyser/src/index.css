@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Primary Button */
+.btn-primary {
+  @apply bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300;
+}
+
+.btn-primary:hover {
+  @apply bg-blue-700 shadow-lg scale-105;
+}
+
+/* Outline Button */
+.btn-outline {
+  @apply border border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-semibold transition duration-300;
+}
+
+.btn-outline:hover {
+  @apply bg-blue-600 text-white shadow-md;
+}
+
+/* Gradient Button */
+.btn-gradient {
+  @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition duration-300;
+}
+
+.btn-gradient:hover {
+  @apply scale-105 shadow-xl;
+}
